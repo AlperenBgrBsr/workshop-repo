@@ -26,14 +26,14 @@ phases:
       - printf '{"ImageURI":"%s"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
 artifacts:
   files: 
-      - 'image*.json'
-      - 'appspec.yaml'
-      - 'taskdef.json'
+      - 'workshop-repo/image*.json'
+      - 'workshop-repo/appspec.yaml'
+      - 'workshop-repo/taskdef.json'
   secondary-artifacts:
       DefinitionArtifact:
           files:
-              - appspec.yaml
-              - taskdef.json
+              - workshop-repo/appspec.yaml
+              - workshop-repo/taskdef.json
       ImageArtifact:
           files:
-              - imageDetail.json
+              - workshop-repo/imageDetail.jsongit add workshop-repo/buildspec.yaml
