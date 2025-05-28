@@ -12,28 +12,34 @@ phases:
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
   build:
     commands:
-    - echo Build started on `date`
-    - echo Building the Docker image...
-    - docker build -t $REPOSITORY_URI:latest ./workshop-repo
-    - docker image tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
-
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t $REPOSITORY_URI:latest ./workshop-repo
+      - docker image tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
+      - cp workshop-repo/taskdef.json .
+      - cp workshop-repo/appspec.yaml .
+      - cp workshop-repo/imageDetail.json .
+      - echo "Files at root before packaging artifacts:"
+      - ls -al
       - echo Build completed on `date`
       - echo Pushing the Docker images...
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - printf '{"ImageURI":"%s"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
+
 artifacts:
-  files: 
-      - 'workshop-repo/image*.json'
-      - 'workshop-repo/appspec.yaml'
-      - 'workshop-repo/taskdef.json'
-  secondary-artifacts:
-      DefinitionArtifact:
-          files:
-              - workshop-repo/appspec.yaml
-              - workshop-repo/taskdef.json
-      ImageArtifact:
-          files:
-              - workshop-repo/imageDetail.jsongit add workshop-repo/buildspec.yaml
+  files:
+    - imageDetail.json
+    - appspec.yaml
+    - taskdef.json
+
+secondary-artifacts:
+  BuildArtifact:
+    files:
+      - appspec.yaml
+      - taskdef.json
+  ImageArtifact:
+    files:
+      - imageDetail.json
