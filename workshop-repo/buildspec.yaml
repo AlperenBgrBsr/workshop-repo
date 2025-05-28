@@ -12,10 +12,11 @@ phases:
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
   build:
     commands:
-      - echo Build started on `date`
-      - echo Building the Docker image...
-      - docker build -t $REPOSITORY_URI:latest .
-      - docker image tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+    - echo Build started on `date`
+    - echo Building the Docker image...
+    - docker build -t $REPOSITORY_URI:latest ./workshop-repo
+    - docker image tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+
   post_build:
     commands:
       - echo Build completed on `date`
